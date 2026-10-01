@@ -124,3 +124,9 @@
 
 /* Hide legacy WA text in floating WhatsApp control */
 .whatsapp{font-size:0}
+
+/* FAQ heading alignment */
+.faq-intro{grid-template-columns:minmax(0,1fr) minmax(360px,.65fr);gap:8%;align-items:center}
+.faq-intro>div{max-width:720px}
+.faq-intro>p{align-self:center;margin:0;max-width:460px;line-height:1.7}
+@media(max-width:800px){.faq-intro{grid-template-columns:1fr;gap:20px;align-items:start}.faq-intro>p{max-width:600px}}
