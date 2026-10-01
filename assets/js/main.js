@@ -10,55 +10,81 @@ function handleForm(e){e.preventDefault();const f=new FormData(e.target);const m
   const panel=wrap.querySelector('.profile-panel');
   const generate=wrap.querySelector('.profile-generate');
   if(!btn||!panel||!generate) return;
-  let pdfPromise;
-  function loadPdfLibrary(){
-    if(window.jspdf?.jsPDF) return Promise.resolve(window.jspdf.jsPDF);
-    if(pdfPromise) return pdfPromise;
-    pdfPromise=new Promise((resolve,reject)=>{
-      const s=document.createElement('script');
-      s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-      s.onload=()=>window.jspdf?.jsPDF?resolve(window.jspdf.jsPDF):reject(new Error('PDF library unavailable'));
-      s.onerror=reject;
-      document.head.appendChild(s);
-    });
-    return pdfPromise;
-  }
+
   const sections={
-    overview:{title:'Company Overview',eyebrow:'01 / WHO WE ARE',text:'S & T Enterprises is a construction company committed to delivering quality workmanship, reliable project execution, and durable solutions. We focus on understanding our clients’ requirements and turning their ideas into well-planned, high-quality spaces.',extra:'Founded in 2018, S & T Enterprises serves clients across Delhi NCR.'},
+    overview:{title:'Company Overview',eyebrow:'01 / WHO WE ARE',text:'S & T Enterprises is a construction company committed to delivering quality workmanship, reliable project execution, and durable solutions. We focus on understanding our clients requirements and turning their ideas into well-planned, high-quality spaces.',extra:'Founded in 2018, S & T Enterprises serves clients across Delhi NCR.'},
     services:{title:'Our Capabilities',eyebrow:'02 / WHAT WE DO',items:['Residential Construction','Commercial Construction','Industrial Construction','Renovation','Interior Construction','Structural Work','Architectural Services']},
-    projects:{title:'Selected Projects',eyebrow:'03 / SELECTED WORK',items:['G-18 — Sector 44 — Residential — Completed 2022','A-129 — Sector 92 — Residential — Completed 2023','A-128 — Sector 92 — Residential — Completed 2025','NFC — NFC — Residential — Ongoing']},
-    process:{title:'Our Process',eyebrow:'04 / HOW WE WORK',items:['PLAN — Understand requirements, scope, priorities and project direction before work begins.','BUILD — Coordinate skilled workmanship, materials and communication through execution.','DELIVER — Focus on quality, detail and a result built for long-term value.']},
+    projects:{title:'Selected Projects',eyebrow:'03 / SELECTED WORK',items:['G-18 - Sector 44 - Residential - Completed 2022','A-129 - Sector 92 - Residential - Completed 2023','A-128 - Sector 92 - Residential - Completed 2025','NFC - NFC - Residential - Ongoing']},
+    process:{title:'Our Process',eyebrow:'04 / HOW WE WORK',items:['PLAN - Understand requirements, scope, priorities and project direction before work begins.','BUILD - Coordinate skilled workmanship, materials and communication through execution.','DELIVER - Focus on quality, detail and a result built for long-term value.']},
     founder:{title:'Founder & Leadership',eyebrow:'05 / LEADERSHIP',text:'Mohd Kashif is the Director of S & T Enterprises. With around 14 years of experience and an M. Tech background, he founded the company with a clear vision to deliver reliable, high-quality construction while building lasting client relationships.'},
     why:{title:'Why Choose S & T',eyebrow:'06 / OUR PROMISE',items:['Quality You Can Trust','Reliable Project Execution','Transparent Communication','Built Around Your Vision']},
-    contact:{title:'Contact Details',eyebrow:'07 / GET IN TOUCH',items:['+91 78360 55232','mohd.kashif2782@gmail.com','Shaheen Bagh, Okhla, New Delhi','Business Hours: 9 AM – 6 PM','Serving Delhi NCR']}
+    contact:{title:'Contact Details',eyebrow:'07 / GET IN TOUCH',items:['+91 78360 55232','mohd.kashif2782@gmail.com','Shaheen Bagh, Okhla, New Delhi','Business Hours: 9 AM - 6 PM','Serving Delhi NCR']}
   };
-  function base(doc,n,title,eyebrow){
-    doc.setFillColor(23,23,20);doc.rect(0,0,210,297,'F');
-    doc.setTextColor(217,164,65);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text('S & T ENTERPRISES',18,19);
-    doc.setTextColor(255,255,255);doc.setFontSize(30);doc.text(title,18,52);
-    doc.setTextColor(150,150,145);doc.setFontSize(9);doc.text(eyebrow,18,63);
-    doc.setDrawColor(70,70,66);doc.line(18,72,192,72);
-    doc.setTextColor(105,105,100);doc.setFontSize(8);doc.text('COMPANY PROFILE  |  S & T ENTERPRISES',18,283);doc.text(String(n).padStart(2,'0'),192,283,{align:'right'});
+
+  const clean=s=>String(s).replace(/[–—]/g,'-').replace(/[’‘]/g,"'").replace(/[“”]/g,'"').replace(/[^\x09\x0A\x0D\x20-\x7E]/g,'');
+  const esc=s=>clean(s).replace(/\\/g,'\\\\').replace(/\\(/g,'\\(').replace(/\\)/g,'\\)');
+  const wrapText=(text,max)=>{const words=clean(text).split(/\\s+/),lines=[];let line='';words.forEach(w=>{if((line+' '+w).trim().length>max&&line){lines.push(line);line=w}else line=(line+' '+w).trim()});if(line)lines.push(line);return lines};
+  const textCmd=(text,x,y,size,font='F1')=>'BT /'+font+' '+size+' Tf '+x+' '+y+' Td ('+esc(text)+') Tj ET';
+  const multiCmd=(lines,x,y,size,leading,font='F1')=>'BT /'+font+' '+size+' Tf '+x+' '+y+' Td '+lines.map((l,i)=>(i?'0 -'+leading+' Td ':'')+'('+esc(l)+') Tj').join(' ')+' ET';
+
+  function pageStream(n,key){
+    const s=sections[key], out=[];
+    out.push('q 0.09 0.09 0.08 rg 0 0 595.28 841.89 re f Q');
+    out.push('q 0.85 0.64 0.18 rg 54 790 487 2 re f Q');
+    out.push(textCmd('S & T ENTERPRISES',54,805,10,'F2'));
+    out.push(textCmd(s.title,54,720,30,'F2'));
+    out.push(textCmd(s.eyebrow,54,697,10,'F1'));
+    out.push('q 0.28 0.28 0.26 RG 54 681 m 541 681 l S Q');
+    let y=625;
+    if(s.text){
+      out.push(textCmd(key==='overview'?'Strong Foundations. Stronger Futures.':'Director, S & T Enterprises',54,y,16,'F2')); y-=34;
+      const lines=wrapText(s.text,78); out.push(multiCmd(lines,54,y,12,18,'F1')); y-=lines.length*18+24;
+      if(s.extra){const extra=wrapText(s.extra,78);out.push(multiCmd(extra,54,y,11,17,'F1'));y-=extra.length*17+35}
+      if(key==='overview'){
+        const stats=[['2018','FOUNDED'],['15+','PROJECTS COMPLETED'],['3','ONGOING PROJECTS'],['14+','FOUNDER EXPERIENCE']];
+        stats.forEach((st,i)=>{const x=54+(i%2)*248, yy=y-Math.floor(i/2)*90;out.push('q 0.15 0.15 0.14 rg '+x+' '+(yy-48)+' 225 64 re f Q');out.push(textCmd(st[0],x+16,yy,20,'F2'));out.push(textCmd(st[1],x+16,yy-22,8,'F1'))});
+      }
+    }else{
+      (s.items||[]).forEach((item,i)=>{const yy=y-i*78;out.push('q 0.15 0.15 0.14 rg 54 '+(yy-42)+' 487 56 re f Q');out.push(textCmd(String(i+1).padStart(2,'0'),70,yy-8,10,'F2'));const lines=wrapText(item,key==='process'?62:48);out.push(multiCmd(lines,112,yy-3,key==='process'?11:14,key==='process'?16:19,'F1'))});
+    }
+    out.push(textCmd('COMPANY PROFILE  |  S & T ENTERPRISES',54,40,8,'F1'));
+    out.push(textCmd(String(n).padStart(2,'0'),525,40,8,'F1'));
+    return out.join('\n');
   }
-  function textBody(doc,text,y,size=12){
-    doc.setFont('helvetica','normal');doc.setFontSize(size);doc.setTextColor(218,218,212);
-    const lines=doc.splitTextToSize(text,170);doc.text(lines,18,y);return y+lines.length*(size*.48+2);
+
+  function buildPdf(keys){
+    const objects=[];
+    const add=o=>{objects.push(o);return objects.length};
+    const font1=add('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
+    const font2=add('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>');
+    const pageIds=[], contentIds=[];
+    keys.forEach((key,i)=>{const stream=pageStream(i+1,key);const c=add('<< /Length '+stream.length+' >>\\nstream\\n'+stream+'\\nendstream');contentIds.push(c);pageIds.push(add(''))});
+    const pagesId=add('');
+    pageIds.forEach((pid,i)=>{objects[pid-1]='<< /Type /Page /Parent '+pagesId+' 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 '+font1+' 0 R /F2 '+font2+' 0 R >> >> /Contents '+contentIds[i]+' 0 R >>'});
+    objects[pagesId-1]='<< /Type /Pages /Kids ['+pageIds.map(id=>id+' 0 R').join(' ') +'] /Count '+pageIds.length+' >>';
+    const catalogId=add('<< /Type /Catalog /Pages '+pagesId+' 0 R >>');
+    let pdf='%PDF-1.4\\n%âãÏÓ\\n', offsets=[0];
+    objects.forEach((obj,i)=>{offsets.push(pdf.length);pdf+=(i+1)+' 0 obj\\n'+obj+'\\nendobj\\n'});
+    const xref=pdf.length;pdf+='xref\\n0 '+(objects.length+1)+'\\n0000000000 65535 f \\n';for(let i=1;i<offsets.length;i++)pdf+=String(offsets[i]).padStart(10,'0')+' 00000 n \\n';
+    pdf+='trailer\\n<< /Size '+(objects.length+1)+' /Root '+catalogId+' 0 R >>\\nstartxref\\n'+xref+'\\n%%EOF';
+    return new Blob([pdf],{type:'application/pdf'});
   }
-  function makePage(doc,n,key){
-    const s=sections[key];base(doc,n,s.title,s.eyebrow);let y=96;
-    if(s.text){doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(15);doc.text(key==='overview'?'Strong Foundations. Stronger Futures.':'Director, S & T Enterprises',18,y);y+=20;y=textBody(doc,s.text,y)+18;if(s.extra)y=textBody(doc,s.extra,y,11)+25;
-      if(key==='overview'){[['2018','FOUNDED'],['15+','PROJECTS COMPLETED'],['3','ONGOING PROJECTS'],['14+','FOUNDER EXPERIENCE']].forEach((x,i)=>{const xx=18+(i%2)*88,yy=y+Math.floor(i/2)*52;doc.setFillColor(38,38,35);doc.roundedRect(xx,yy,80,38,2,2,'F');doc.setTextColor(217,164,65);doc.setFont('helvetica','bold');doc.setFontSize(18);doc.text(x[0],xx+8,yy+17);doc.setTextColor(170,170,165);doc.setFontSize(7);doc.text(x[1],xx+8,yy+29)})}
-    }else{s.items.forEach((item,i)=>{const yy=y+i*38;doc.setFillColor(38,38,35);doc.roundedRect(18,yy-10,174,27,2,2,'F');doc.setTextColor(217,164,65);doc.setFont('helvetica','bold');doc.setFontSize(9);doc.text(String(i+1).padStart(2,'0'),27,yy+6);doc.setTextColor(245,245,240);doc.setFont('helvetica',key==='process'?'normal':'bold');doc.setFontSize(key==='process'?11:14);doc.text(doc.splitTextToSize(item,150),42,yy+2)})}
-  }
-  async function generateProfile(keys){
-    generate.disabled=true;generate.textContent='Preparing PDF...';
-    try{const jsPDF=await loadPdfLibrary();const doc=new jsPDF({unit:'mm',format:'a4'});keys.forEach((key,i)=>{if(i)doc.addPage();makePage(doc,i+1,key)});doc.save('ST-Enterprises-Company-Profile.pdf');closePanel()}catch(e){console.error(e);alert('PDF could not be generated. Please check your internet connection and try again.')}finally{generate.disabled=false;generate.innerHTML='Generate PDF <span>↓</span>'}
-  }
+
   function closePanel(){panel.classList.remove('is-open');panel.setAttribute('aria-hidden','true');btn.setAttribute('aria-expanded','false')}
   btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();const open=!panel.classList.contains('is-open');panel.classList.toggle('is-open',open);panel.setAttribute('aria-hidden',String(!open));btn.setAttribute('aria-expanded',String(open))});
   panel.addEventListener('click',e=>e.stopPropagation());
-  wrap.querySelector('.profile-close').addEventListener('click',closePanel);
-  generate.addEventListener('click',()=>{const keys=[...panel.querySelectorAll('input:checked')].map(i=>i.value);if(!keys.length){alert('Please select at least one section.');return}generateProfile(keys)});
+  wrap.querySelector('.profile-close')?.addEventListener('click',closePanel);
+  generate.addEventListener('click',()=>{
+    const keys=[...panel.querySelectorAll('input:checked')].map(i=>i.value);
+    if(!keys.length){alert('Please select at least one section.');return}
+    generate.disabled=true;generate.textContent='Creating PDF...';
+    try{
+      const blob=buildPdf(keys),url=URL.createObjectURL(blob),a=document.createElement('a');
+      a.href=url;a.download='ST-Enterprises-Company-Profile.pdf';a.style.display='none';document.body.appendChild(a);a.click();a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),1000);closePanel();
+    }catch(e){console.error(e);alert('PDF could not be generated. Please try again.')}
+    finally{generate.disabled=false;generate.innerHTML='Generate PDF <span>↓</span>'}
+  });
   document.addEventListener('click',e=>{if(!wrap.contains(e.target))closePanel()});
   document.addEventListener('keydown',e=>{if(e.key==='Escape')closePanel()});
 })();
