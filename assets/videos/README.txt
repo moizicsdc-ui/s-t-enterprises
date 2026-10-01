@@ -1,0 +1,1 @@
+Add the hero construction video here as hero-construction.mp4. Keep it compressed for fast loading; the site will fall back to the poster/background styling if the video is unavailable.
