@@ -34,33 +34,31 @@
 
   const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   function page(k,i,total){
-    const d=data[k], itemHTML=d.items?'<div class="profile-items">'+d.items.map((x,n)=>'<div class="profile-item"><span>'+String(n+1).padStart(2,'0')+'</span><div>'+esc(x)+'</div></div>').join('')+'</div>':'';
+    const d=data[k], cover=k==='overview';
+    const itemHTML=d.items?'<div class="profile-items">'+d.items.map((x,n)=>'<div class="profile-item"><span>'+String(n+1).padStart(2,'0')+'</span><div><b>'+esc(x.split(' — ')[0])+'</b>'+(x.includes(' — ')?'<small>'+esc(x.split(' — ').slice(1).join(' — '))+'</small>':'')+'</div></div>').join('')+'</div>':'';
     const textHTML=d.text?d.text.map(x=>'<p>'+esc(x)+'</p>').join(''):'';
     const stats=d.stats?'<div class="profile-stats">'+d.stats.map(x=>'<div><strong>'+esc(x[0])+'</strong><span>'+esc(x[1])+'</span></div>').join('')+'</div>':'';
-    return '<section class="pdf-profile-page"><div class="pdf-top"><span>S & T ENTERPRISES</span><span>COMPANY PROFILE</span></div><div class="pdf-accent"></div><div class="pdf-main"><div class="pdf-eyebrow">'+esc(d.eyebrow)+'</div><h1>'+esc(d.title)+'</h1>'+(d.intro?'<h2>'+esc(d.intro)+'</h2>':'')+'<div class="pdf-rule"></div><div class="pdf-copy">'+textHTML+'</div>'+itemHTML+stats+'</div><div class="pdf-bottom"><span>STRONG FOUNDATIONS. STRONGER FUTURES.</span><span>'+String(i+1).padStart(2,'0')+' / '+String(total).padStart(2,'0')+'</span></div></section>';
+    return '<section class="pdf-profile-page '+(cover?'pdf-cover':'')+'"><div class="pdf-grid"></div><div class="pdf-top"><span>S & T ENTERPRISES</span><span>COMPANY PROFILE / 2026</span></div><div class="pdf-accent"></div><div class="pdf-main"><div class="pdf-eyebrow">'+esc(d.eyebrow)+'</div><h1>'+esc(d.title)+'</h1>'+(d.intro?'<h2>'+esc(d.intro)+'</h2>':'')+'<div class="pdf-rule"></div><div class="pdf-copy">'+textHTML+'</div>'+itemHTML+stats+'</div><div class="pdf-bottom"><span>STRONG FOUNDATIONS. STRONGER FUTURES.</span><span>'+String(i+1).padStart(2,'0')+' / '+String(total).padStart(2,'0')+'</span></div></section>';
   }
 
   function styles(){
     const s=document.createElement('style');s.id='st-profile-pdf-styles';s.textContent=`
       .st-pdf-render{position:fixed;left:-100000px;top:0;width:794px;background:#f2efe8;z-index:-1}
       .pdf-profile-page{box-sizing:border-box;width:794px;height:1123px;padding:58px 64px 52px;background:#f2efe8;color:#171714;font-family:Arial,Helvetica,sans-serif;position:relative;overflow:hidden}
-      .pdf-top{display:flex;justify-content:space-between;align-items:center;font-size:10px;font-weight:700;letter-spacing:2px;color:#5f5b54}
-      .pdf-accent{width:100%;height:3px;background:#d9a441;margin-top:22px}
-      .pdf-main{padding-top:105px}
-      .pdf-eyebrow{font-size:11px;font-weight:700;letter-spacing:2.4px;color:#777168;margin-bottom:18px}
-      .pdf-profile-page h1{font-size:48px;line-height:1.02;letter-spacing:-1.8px;margin:0 0 18px;font-weight:700;max-width:650px}
-      .pdf-profile-page h2{font-size:20px;line-height:1.35;margin:0 0 26px;font-weight:700;letter-spacing:-.3px}
-      .pdf-rule{width:100%;height:1px;background:#c9c4bb;margin:26px 0 32px}
-      .pdf-copy{max-width:620px}
-      .pdf-copy p{font-size:15px;line-height:1.75;margin:0 0 18px;color:#4f4b45}
-      .profile-items{margin-top:8px}
-      .profile-item{display:grid;grid-template-columns:52px 1fr;gap:18px;align-items:start;border-top:1px solid #c9c4bb;padding:20px 0;font-size:17px;line-height:1.5;color:#282621}
-      .profile-item>span{font-size:11px;font-weight:700;letter-spacing:1.5px;color:#a07a2e;padding-top:4px}
-      .profile-stats{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:35px}
-      .profile-stats>div{background:#211f1b;color:#f2efe8;padding:22px 20px;min-height:72px}
-      .profile-stats strong{display:block;font-size:25px;line-height:1;margin-bottom:10px}
-      .profile-stats span{display:block;font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:#c8c3ba}
-      .pdf-bottom{position:absolute;left:64px;right:64px;bottom:25px;border-top:1px solid #c9c4bb;padding-top:13px;display:flex;justify-content:space-between;font-size:8px;letter-spacing:1.4px;color:#777168}
+      .pdf-grid{position:absolute;right:-110px;top:90px;width:340px;height:340px;border:1px solid rgba(23,23,20,.09);transform:rotate(45deg);box-shadow:0 0 0 32px rgba(23,23,20,.025),0 0 0 64px rgba(23,23,20,.02);pointer-events:none}
+      .pdf-top{display:flex;justify-content:space-between;align-items:center;font-size:9px;font-weight:700;letter-spacing:2px;color:#5f5b54}
+      .pdf-accent{width:86px;height:4px;background:#d9a441;margin-top:22px}
+      .pdf-main{padding-top:94px;position:relative;z-index:1}
+      .pdf-eyebrow{font-size:10px;font-weight:700;letter-spacing:2.5px;color:#8b816f;margin-bottom:18px}
+      .pdf-profile-page h1{font-size:51px;line-height:.98;letter-spacing:-2.2px;margin:0 0 20px;font-weight:700;max-width:650px}
+      .pdf-profile-page h2{font-size:21px;line-height:1.35;margin:0 0 25px;font-weight:700;letter-spacing:-.3px;max-width:620px}
+      .pdf-rule{width:100%;height:1px;background:#c9c4bb;margin:25px 0 30px}
+      .pdf-copy{max-width:625px}.pdf-copy p{font-size:14px;line-height:1.72;margin:0 0 17px;color:#4f4b45}
+      .profile-items{margin-top:4px}.profile-item{display:grid;grid-template-columns:54px 1fr;gap:18px;align-items:start;border-top:1px solid #c9c4bb;padding:17px 0;font-size:16px;line-height:1.35;color:#282621}
+      .profile-item>span{font-size:10px;font-weight:700;letter-spacing:1.5px;color:#a07a2e;padding-top:2px}.profile-item b{font-size:17px;font-weight:700;display:block}.profile-item small{display:block;font-size:10px;line-height:1.5;color:#777168;text-transform:uppercase;letter-spacing:1px;margin-top:5px}
+      .profile-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:30px}.profile-stats>div{background:#211f1b;color:#f2efe8;padding:20px 18px;min-height:66px;position:relative}.profile-stats>div:after{content:'';position:absolute;right:12px;top:12px;width:7px;height:7px;background:#d9a441}.profile-stats strong{display:block;font-size:25px;line-height:1;margin-bottom:9px}.profile-stats span{display:block;font-size:8px;text-transform:uppercase;letter-spacing:1.4px;color:#c8c3ba}
+      .pdf-cover{background:#171714;color:#f2efe8}.pdf-cover .pdf-top{color:#bdb7ac}.pdf-cover .pdf-accent{width:150px;height:5px}.pdf-cover .pdf-main{padding-top:285px}.pdf-cover .pdf-eyebrow{color:#d9a441}.pdf-cover h1{font-size:67px;max-width:650px}.pdf-cover h2{font-size:22px;color:#d3cec4;max-width:500px}.pdf-cover .pdf-rule{background:#514d45;width:150px}.pdf-cover .pdf-grid{right:-40px;top:250px;width:520px;height:520px;border-color:rgba(217,164,65,.22);box-shadow:0 0 0 42px rgba(217,164,65,.04),0 0 0 84px rgba(217,164,65,.025)}
+      .pdf-bottom{position:absolute;left:64px;right:64px;bottom:25px;border-top:1px solid #c9c4bb;padding-top:13px;display:flex;justify-content:space-between;font-size:8px;letter-spacing:1.4px;color:#777168}.pdf-cover .pdf-bottom{border-color:#514d45;color:#999389}
     `;document.head.appendChild(s);return s;
   }
 
