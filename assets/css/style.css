@@ -120,3 +120,7 @@
 .whatsapp{display:flex!important;align-items:center;justify-content:center;gap:0}
 .whatsapp .whatsapp-icon{width:23px;height:23px;flex-basis:23px;margin:0;vertical-align:0}
 .enquiry-form .whatsapp-icon{width:18px;height:18px;flex-basis:18px;margin-right:8px;vertical-align:-4px}
+
+
+/* Hide legacy WA text in floating WhatsApp control */
+.whatsapp{font-size:0}
