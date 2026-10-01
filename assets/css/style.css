@@ -155,3 +155,5 @@
 .profile-menu{position:relative;display:inline-flex!important;flex:0 0 auto}
 .profile-download{white-space:nowrap}
 @media(max-width:1100px) and (min-width:801px){.site-header{padding-inline:2.5vw}.site-header nav{gap:12px;font-size:10px}.nav-cta{padding:9px 11px}.profile-download{padding:9px 11px}}
+
+.profile-menu:focus-within .profile-panel{opacity:1;visibility:visible;transform:none}
