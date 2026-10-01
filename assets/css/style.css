@@ -130,3 +130,10 @@
 .faq-intro>div{max-width:720px}
 .faq-intro>p{align-self:center;margin:0;max-width:460px;line-height:1.7}
 @media(max-width:800px){.faq-intro{grid-template-columns:1fr;gap:20px;align-items:start}.faq-intro>p{max-width:600px}}
+
+
+/* Dynamic company profile download */
+.profile-download{cursor:pointer;display:inline-flex!important;align-items:center;gap:8px;text-decoration:none}
+.profile-download span{font-size:14px;line-height:1}
+.profile-download[aria-busy="true"]{opacity:.7;pointer-events:none}
+@media(max-width:800px){.profile-download{margin-top:18px!important;text-align:center;justify-content:center}}
