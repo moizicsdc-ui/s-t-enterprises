@@ -1,0 +1,1 @@
+Add the final hero poster, company logo, founder photo and project photographs here later. Recommended formats: WebP/JPG, optimized for web.
