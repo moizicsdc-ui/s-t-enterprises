@@ -30,3 +30,38 @@
 .editorial-projects .project-info h3{transition:letter-spacing .35s,transform .35s}
 .editorial-projects .project-card:hover .project-info h3{letter-spacing:-.06em;transform:translateX(3px)}
 @media(max-width:800px){.service-grid .service-card,.service-grid .service-card:not(:nth-child(3n+1)){padding:25px 0!important;min-height:245px;border-left:0!important}.service-card .service-icon{right:0}.service-card h3{margin-top:34px}.service-card .service-link{opacity:1;transform:none}.service-card:before{right:0}.editorial-projects .project-media{box-shadow:none}.editorial-projects .project-media:before{inset:7px}.editorial-projects .project-hover-label{opacity:1;transform:none;bottom:25px}}
+
+/* Editorial process + founder treatment */
+.process-premium{background:var(--accent);padding-top:115px;padding-bottom:95px;overflow:hidden}
+.process-intro{display:grid;grid-template-columns:1fr .65fr;gap:10%;align-items:end;margin-bottom:75px}
+.process-intro h2{margin:12px 0 0}
+.process-intro>p{max-width:430px;margin:0;font-size:15px;color:rgba(23,23,20,.68)}
+.process-track{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid rgba(23,23,20,.28)}
+.process-track article{position:relative;padding:25px 28px 0 0;min-height:330px}
+.process-track article+article{padding-left:28px;border-left:1px solid rgba(23,23,20,.28)}
+.process-top{display:flex;justify-content:space-between;align-items:center}
+.process-top span{font-size:11px;letter-spacing:.16em}
+.process-top i{font-style:normal;font-size:22px;transition:transform .35s}
+.process-line{height:1px;background:rgba(23,23,20,.25);margin:30px 0 38px;position:relative}
+.process-line b{display:block;width:38px;height:3px;background:var(--ink);position:absolute;top:-1px;transform-origin:left;transition:width .45s}
+.process-track article:hover .process-line b{width:100%}
+.process-track article:hover .process-top i{transform:translate(5px,-5px)}
+.process-track h3{font-size:clamp(38px,4vw,58px);letter-spacing:-.055em;margin:0 0 14px}
+.process-track p{max-width:330px;color:rgba(23,23,20,.68);font-size:14px}
+.process-track small{display:block;margin-top:28px;font-size:9px;letter-spacing:.18em;font-weight:700}
+.process-footer{display:flex;justify-content:space-between;align-items:center;margin-top:70px;padding-top:20px;border-top:1px solid rgba(23,23,20,.28);font-size:9px;letter-spacing:.18em}
+.process-footer b{font-size:20px;font-weight:400}
+.founder-editorial{grid-template-columns:.78fr 1fr;gap:10%;background:#e7e2d7;align-items:center}
+.founder-editorial .founder-photo{position:relative;min-height:600px;background:linear-gradient(145deg,#c7c2b7,#89847b);display:flex;flex-direction:column;justify-content:center;align-items:center;color:rgba(255,255,255,.8);overflow:hidden}
+.founder-editorial .founder-photo:before{content:"";position:absolute;width:75%;height:75%;border:1px solid rgba(255,255,255,.2);transform:rotate(45deg)}
+.founder-editorial .founder-photo span{position:relative;font-size:clamp(100px,15vw,190px);font-weight:900;letter-spacing:-.1em;color:rgba(255,255,255,.15);line-height:.8}
+.founder-editorial .founder-photo small{position:relative;margin-top:22px;text-align:center;line-height:1.7}
+.founder-editorial .founder-photo b{position:absolute;left:25px;bottom:22px;font-size:9px;letter-spacing:.18em;color:rgba(255,255,255,.7)}
+.founder-copy h2{margin-top:12px}
+.founder-copy .lead{max-width:650px}
+.founder-home-stats{display:flex;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:35px 0 5px}
+.founder-home-stats>div{padding:20px 25px 20px 0;min-width:145px}
+.founder-home-stats>div+div{border-left:1px solid var(--line);padding-left:25px}
+.founder-home-stats strong{display:block;font-size:25px;letter-spacing:-.04em}
+.founder-home-stats span{display:block;margin-top:5px;font-size:8px;letter-spacing:.15em;color:#777}
+@media(max-width:800px){.process-premium{padding-top:80px;padding-bottom:70px}.process-intro{grid-template-columns:1fr;gap:20px;margin-bottom:45px}.process-track{grid-template-columns:1fr}.process-track article,.process-track article+article{padding:25px 0;min-height:250px;border-left:0;border-bottom:1px solid rgba(23,23,20,.28)}.process-track article:first-child{border-top:0}.process-footer{margin-top:40px;gap:15px;align-items:flex-start}.process-footer span:last-child{text-align:right}.founder-editorial .founder-photo{min-height:390px}.founder-home-stats{overflow:auto}.founder-home-stats>div{min-width:125px}}
