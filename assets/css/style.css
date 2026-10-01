@@ -149,3 +149,9 @@
 .profile-generate{width:100%;border:0;background:var(--ink);color:#fff;padding:14px 16px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;cursor:pointer}
 .profile-generate:disabled{opacity:.65;cursor:wait}
 @media(max-width:800px){.profile-menu{display:block}.profile-panel{position:fixed;right:12px;left:12px;top:82px;width:auto;max-height:calc(100svh - 96px);overflow:auto}.profile-panel:before{display:none}.profile-download{width:100%;margin-top:18px!important;justify-content:center}}
+
+/* Company Profile navigation visibility */
+.site-header nav{gap:18px;flex-wrap:nowrap}
+.profile-menu{position:relative;display:inline-flex!important;flex:0 0 auto}
+.profile-download{white-space:nowrap}
+@media(max-width:1100px) and (min-width:801px){.site-header{padding-inline:2.5vw}.site-header nav{gap:12px;font-size:10px}.nav-cta{padding:9px 11px}.profile-download{padding:9px 11px}}
