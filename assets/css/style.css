@@ -112,3 +112,11 @@
 .about-home-meta span{display:block;font-size:10px;line-height:1.4;letter-spacing:.14em;color:#777;white-space:nowrap}
 .about-home-meta .meta-primary{grid-column:1/-1}
 @media(max-width:420px){.about-home-meta{grid-template-columns:1fr;column-gap:0}.about-home-meta .meta-primary{grid-column:auto}}
+
+
+/* WhatsApp icon */
+.whatsapp-icon{width:17px;height:17px;display:inline-block;flex:0 0 17px;fill:currentColor;vertical-align:-3px;margin-right:8px}
+.nav-cta .whatsapp-icon{width:16px;height:16px;flex-basis:16px;margin-right:6px}
+.whatsapp{display:flex!important;align-items:center;justify-content:center;gap:0}
+.whatsapp .whatsapp-icon{width:23px;height:23px;flex-basis:23px;margin:0;vertical-align:0}
+.enquiry-form .whatsapp-icon{width:18px;height:18px;flex-basis:18px;margin-right:8px;vertical-align:-4px}
