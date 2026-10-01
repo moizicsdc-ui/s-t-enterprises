@@ -133,7 +133,19 @@
 
 
 /* Dynamic company profile download */
+.profile-menu{position:relative;display:inline-flex}
 .profile-download{cursor:pointer;display:inline-flex!important;align-items:center;gap:8px;text-decoration:none}
 .profile-download span{font-size:14px;line-height:1}
-.profile-download[aria-busy="true"]{opacity:.7;pointer-events:none}
-@media(max-width:800px){.profile-download{margin-top:18px!important;text-align:center;justify-content:center}}
+.profile-panel{position:absolute;right:0;top:calc(100% + 14px);width:320px;padding:22px;background:#f2efe8;color:var(--ink);border:1px solid rgba(23,23,20,.14);box-shadow:0 24px 70px rgba(0,0,0,.28);opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .22s,transform .22s,visibility .22s;z-index:100}
+.profile-panel.is-open{opacity:1;visibility:visible;transform:none}
+.profile-panel:before{content:"";position:absolute;right:24px;top:-7px;width:12px;height:12px;background:#f2efe8;border-left:1px solid rgba(23,23,20,.14);border-top:1px solid rgba(23,23,20,.14);transform:rotate(45deg)}
+.profile-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.profile-panel-head strong{font-size:14px;letter-spacing:-.02em}
+.profile-close{border:0;background:none;font-size:23px;line-height:1;cursor:pointer;color:var(--ink)}
+.profile-panel>p{margin:8px 0 17px;color:#6b6861;font-size:11px;line-height:1.55}
+.profile-panel label{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-size:10px;color:var(--ink);letter-spacing:.08em;cursor:pointer}
+.profile-panel input{width:15px;height:15px;margin:0;accent-color:var(--accent)}
+.profile-panel-actions{margin-top:14px}
+.profile-generate{width:100%;border:0;background:var(--ink);color:#fff;padding:14px 16px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;cursor:pointer}
+.profile-generate:disabled{opacity:.65;cursor:wait}
+@media(max-width:800px){.profile-menu{display:block}.profile-panel{position:fixed;right:12px;left:12px;top:82px;width:auto;max-height:calc(100svh - 96px);overflow:auto}.profile-panel:before{display:none}.profile-download{width:100%;margin-top:18px!important;justify-content:center}}
