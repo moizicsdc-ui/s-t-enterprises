@@ -21,7 +21,7 @@ function handleForm(e){e.preventDefault();const f=new FormData(e.target);const m
       '<label><input type="checkbox" value="contact" checked> Contact Details</label>'+
       '<div class="profile-panel-actions"><button type="button" class="profile-generate">Generate PDF <span>↓</span></button></div>'+
     '</div>';
-  nav.appendChild(wrap);
+  if(!existing) nav.appendChild(wrap);
   let pdfPromise;
   function loadPdfLibrary(){
     if(window.jspdf?.jsPDF) return Promise.resolve(window.jspdf.jsPDF);
